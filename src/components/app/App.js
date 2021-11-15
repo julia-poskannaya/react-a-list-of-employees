@@ -10,11 +10,14 @@ import EmployeesAddForm from "../employees-add-form/EmployeesAddForm";
 const App = () => {
     const identifier = nanoid();
     const [data, setData] = useState([
-        {name: 'John D.', salary: 1000, id: 1},
-        {name: 'Rose M.', salary: 5000, id: 2},
-        {name: 'Stephen T.', salary: 9000, id: 3},
+        {name: 'John D.', salary: 1000, increase: false, rise: false, id: 1},
+        {name: 'Rose M.', salary: 5000, increase: false, rise: false, id: 2},
+        {name: 'Stephen T.', salary: 9000, increase: false, rise: false, id: 3},
     ]);
 
+    const employees = data.length;
+    const increased = data.filter(item => item.increase).length;
+    
     function deleteItem(id){
         setData((data) => {          
             return data.filter(item => item.id !== id);
@@ -25,6 +28,8 @@ const App = () => {
         const newEmployee = {
             name,
             salary,
+            increase: false,
+            rise: false,
             id: identifier
         }
 
@@ -32,12 +37,23 @@ const App = () => {
             data = [...data, newEmployee];
             return data;
         })
-        
-    }    
-
+    }   
+    
+    function onToggleProp(id, prop){
+       setData((data)=> {
+            return data.map(item => {
+                if (item.id === id) {
+                    return {...item, [prop]: !item[prop]}
+                }
+                return item;
+            })
+       })
+    }
     return (
         <div className = "app">
-            <AppInfo/>
+            <AppInfo 
+                employees={employees} 
+                increased={increased}/>
 
             <div className="search-pannel">
                 <SearchPannel/>
@@ -46,7 +62,8 @@ const App = () => {
 
             <EmployeesList 
                 data={data}
-                onDelete={deleteItem}/>
+                onDelete={deleteItem}
+                onToggleProp={onToggleProp}/>
             <EmployeesAddForm onAdd={addItem}/>
         </div>
         

@@ -1,35 +1,30 @@
-import { useState } from "react";
-
-const EmployeesListItem = ({name, salary, onDelete}) => {
-    const [increaseValue, setIncreaseValue] = useState(false);
-    const [riseValue, setRiseValue] = useState(false);
+const EmployeesListItem = ({
+    name, 
+    salary, 
+    onDelete, 
+    increase, 
+    rise, 
+    onToggleProp}) => {
 
     let classNames = "list-group-item d-flex justify-content-between";
-    if(increaseValue){
+    if(increase){
         classNames += ' increase';
     }
 
-    if(riseValue){
+    if(rise){
         classNames += ' like';
     }
     
-    function onIncrease(){
-        setIncreaseValue(increaseValue => !increaseValue);
-    }
-
-    function onRise(){
-        setRiseValue(riseValue => !riseValue);
-    }
-
     return (
         <li className={classNames}>
-            <span className="list-group-item-label" onClick={onRise}>{name}</span>
+            <span className="list-group-item-label" onClick={onToggleProp} data-toggle="rise">{name}</span>
             <input type="text" className="list-group-item-input" defaultValue={salary + '$'}/>
             <div className='d-flex justify-content-center align-items-center'>
                 <button 
                 type="button" 
-                className="btn-cookie btn-sm "
-                onClick={onIncrease}>
+                className="btn-cookie btn-sm"
+                data-toggle="increase"
+                onClick={onToggleProp}>
                     <i className="fas fa-cookie"></i>
                 </button>
 
