@@ -14,6 +14,9 @@ const EmployeesAddForm = ({onAdd}) => {
 
     function onAddEmployee(e){
         e.preventDefault();
+        if(!name || !salary){
+            return
+        }
         onAdd(name, salary);
         setName('');
         setSalary('');
