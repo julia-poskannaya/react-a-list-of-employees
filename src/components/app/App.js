@@ -53,7 +53,6 @@ const App = () => {
         if(term.length === 0 ){
             return items
         }
-
         return items.filter((item) => {
             return item.name.indexOf(term) > -1
         })
