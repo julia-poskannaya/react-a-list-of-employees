@@ -15,6 +15,7 @@ const App = () => {
         {name: 'Stephen T.', salary: 9000, increase: false, rise: false, id: 3},
     ]);
     const [term, setTerm] = useState('');
+    const [filter, setFilter] = useState('');
         
     function deleteItem(id){
         setData((data) => {          
@@ -62,9 +63,25 @@ const App = () => {
         setTerm(term);
     }
 
+    function filterEmployees(items, filter){
+        switch (filter){
+            case 'rise':
+                return items.filter(item => item.rise);
+            case 'moreThan1000':
+                return items.filter(item => item.salary > 1000);
+            default:
+                return items;
+        }
+    }
+
+    function onFilterSelect(filter){
+        setFilter(filter);
+    }
+
     const employees = data.length;
     const increased = data.filter(item => item.increase).length;
-    const visibleData = searchEmployee(data, term);
+    const searchData = searchEmployee(data, term); 
+    const visibleData = filterEmployees(searchData, filter);
 
     return (
         <div className = "app">
@@ -75,7 +92,9 @@ const App = () => {
             <div className="search-pannel">
                 <SearchPannel 
                     onUpdateSearch={onUpdateSearch}/>
-                <AppFilter/>
+                <AppFilter
+                    onFilterSelect={onFilterSelect}
+                    filter={filter}/>
             </div>
 
             <EmployeesList 
