@@ -14,10 +14,8 @@ const App = () => {
         {name: 'Rose M.', salary: 5000, increase: false, rise: false, id: 2},
         {name: 'Stephen T.', salary: 9000, increase: false, rise: false, id: 3},
     ]);
-
-    const employees = data.length;
-    const increased = data.filter(item => item.increase).length;
-    
+    const [term, setTerm] = useState('');
+        
     function deleteItem(id){
         setData((data) => {          
             return data.filter(item => item.id !== id);
@@ -49,6 +47,25 @@ const App = () => {
             })
        })
     }
+
+    function searchEmployee(items, term){
+        if(term.length === 0 ){
+            return items
+        }
+
+        return items.filter((item) => {
+            return item.name.indexOf(term) > -1
+        })
+    }
+
+    function onUpdateSearch(term){
+        setTerm(term);
+    }
+
+    const employees = data.length;
+    const increased = data.filter(item => item.increase).length;
+    const visibleData = searchEmployee(data, term);
+
     return (
         <div className = "app">
             <AppInfo 
@@ -56,12 +73,13 @@ const App = () => {
                 increased={increased}/>
 
             <div className="search-pannel">
-                <SearchPannel/>
+                <SearchPannel 
+                    onUpdateSearch={onUpdateSearch}/>
                 <AppFilter/>
             </div>
 
             <EmployeesList 
-                data={data}
+                data={visibleData}
                 onDelete={deleteItem}
                 onToggleProp={onToggleProp}/>
             <EmployeesAddForm onAdd={addItem}/>
