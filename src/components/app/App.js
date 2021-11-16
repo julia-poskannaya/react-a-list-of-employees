@@ -14,10 +14,9 @@ const App = () => {
         {name: 'Rose M.', salary: 5000, increase: false, rise: false, id: 2},
         {name: 'Stephen T.', salary: 9000, increase: false, rise: false, id: 3},
     ]);
-
-    const employees = data.length;
-    const increased = data.filter(item => item.increase).length;
-    
+    const [term, setTerm] = useState('');
+    const [filter, setFilter] = useState('');
+        
     function deleteItem(id){
         setData((data) => {          
             return data.filter(item => item.id !== id);
@@ -49,6 +48,40 @@ const App = () => {
             })
        })
     }
+
+    function searchEmployee(items, term){
+        if(term.length === 0 ){
+            return items
+        }
+        return items.filter((item) => {
+            return item.name.indexOf(term) > -1
+        })
+    }
+
+    function onUpdateSearch(term){
+        setTerm(term);
+    }
+
+    function filterEmployees(items, filter){
+        switch (filter){
+            case 'rise':
+                return items.filter(item => item.rise);
+            case 'moreThan1000':
+                return items.filter(item => item.salary > 1000);
+            default:
+                return items;
+        }
+    }
+
+    function onFilterSelect(filter){
+        setFilter(filter);
+    }
+
+    const employees = data.length;
+    const increased = data.filter(item => item.increase).length;
+    const searchData = searchEmployee(data, term); 
+    const visibleData = filterEmployees(searchData, filter);
+
     return (
         <div className = "app">
             <AppInfo 
@@ -56,12 +89,15 @@ const App = () => {
                 increased={increased}/>
 
             <div className="search-pannel">
-                <SearchPannel/>
-                <AppFilter/>
+                <SearchPannel 
+                    onUpdateSearch={onUpdateSearch}/>
+                <AppFilter
+                    onFilterSelect={onFilterSelect}
+                    filter={filter}/>
             </div>
 
             <EmployeesList 
-                data={data}
+                data={visibleData}
                 onDelete={deleteItem}
                 onToggleProp={onToggleProp}/>
             <EmployeesAddForm onAdd={addItem}/>
